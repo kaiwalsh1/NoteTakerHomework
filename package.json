@@ -1,0 +1,23 @@
+{
+  "name": "notetakerhomework",
+  "version": "1.0.0",
+  "description": "By: Kai Walsh",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaiwalsh1/NoteTakerHomework.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kaiwalsh1/NoteTakerHomework/issues"
+  },
+  "homepage": "https://github.com/kaiwalsh1/NoteTakerHomework#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
