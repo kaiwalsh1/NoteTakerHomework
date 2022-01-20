@@ -6,4 +6,4 @@ const notes = [
     }
 ];
 
-module.exports = {notes: notes};
+module.exports = notes;
