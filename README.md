@@ -2,7 +2,7 @@
 By: Kai Walsh
 
 ## Description
-Modified starter code 
+Modified starter code to create an online note taker application where you can add and delete tasks.
 
 ## User Story
 AS A small business owner
@@ -32,7 +32,7 @@ THEN I am presented with empty fields to enter a new note title and the note’s
 - [Credits] (#Credits)
 
 ## Installation
-This application uses Node.js, Express.js, and Heroku
+This application uses Node.js, Express.js, uuid, and Heroku
 
 ## Usage
 
