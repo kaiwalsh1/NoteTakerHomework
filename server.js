@@ -2,7 +2,7 @@ const express = require('express');
 const notes = require('./db/db.json');
 const fs = require('fs');
 const path = require('path');
-const uuid = require('uuid');
+const uuid = require('./helpers/uuid');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -38,32 +38,56 @@ app.post('/api/notes', (req, res) => {
     // receive a new note to save on the request body
     // add it to the db.json file
     // return the new note to the client with a unique id when it's saved (body-parser)
-    const note = req.body;
-    fs.readFile('./db/db.json', (err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            const allNotes = JSON.parse(data);
-            allNotes.push(note);
-            console.log(allNotes);
-            fs.writeFile('./db/db.json', JSON.stringify(allNotes), (err) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.json(note);
-                }
-            })
+    const { title, text } = req.body;
+    if (title && text) {
+        const note = {
+            title,
+            text,
+            id: uuid
         }
-    })
-
+        fs.readFile('./db/db.json', (err, data) => {
+            if (err) {
+                console.log(err);
+            } else {
+                const allNotes = JSON.parse(data);
+                allNotes.push(note);
+                fs.writeFile('./db/db.json', JSON.stringify(allNotes), (err) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        res.json(allNotes);
+                    }
+                })
+            }
+        })
+    }
 })
 // give id to new note
 // push to all notes
 
-// DELETE /api/notes/:id
+// // Deleting one
 app.delete('/api/notes/:id', (req, res) => {
+    let noteData = fs.readFileSync('./db/db.json');
+    let note = JSON.parse(noteData);
+    const notesSaved = note.find(n => n.id === parseInt(req.params.id));
+    const notesIndex = note.indexOf(notesSaved);
+    note.splice(notesIndex);
 
-})
+    fs.writeFile(__dirname + "/db/db.json", JSON.stringify(note), (err, data) => {
+        if (err) throw err;
+        res.json(note);
+    });
+    // noteData.filter(noteById => {
+    //     return noteById.id != note;
+    // })
+    // fs.writeFile('./db/db.json', JSON.stringify(noteData), (err) => {
+    //     if (err) {
+    //         console.log(err);
+    //     } else {
+    //         res.json(noteData);
+    //     }
+    // });
+});
 
 // GET * 
 app.get('*', (req, res) => {
@@ -71,14 +95,24 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
 })
 
-
-// // updating one
-// app.post('/:id', (req, res) => {
-
-// })
-// // Deleting one
-// app.delete('/:id', (req, res) => {
-
-// })
-
 app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
+
+
+// app.delete("/api/notes/:id", (req, res) => {
+//     // Each note is given a unique id when it's saved
+//     // To delete a note, read all notes from the db.json file
+//     let noteData = fs.readFileSync('./db/db.json');
+//     let noteTaker = JSON.parse(noteData);
+//     // const notesSaved = noteTaker.filter(note => parseInt(note.id) !== parseInt(req.params.id));
+//     const notesSaved = noteTaker.find(n => n.id === parseInt(req.params.id));
+//     // select and delete selected note by removing the note with the given id property
+//     const notesIndex = noteTaker.indexOf(notesSaved);
+//     noteTaker.splice(notesIndex);
+
+//     // rewrite the notes to the db.json file
+//     fs.writeFile(__dirname + "/db/db.json", JSON.stringify(noteTaker), (err, data) => {
+//         if (err) throw err;
+//         //send response back to client
+//         res.json(noteTaker)
+//     });
+// // });

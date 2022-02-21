@@ -42,5 +42,5 @@ This application uses Node.js, Express.js, uuid, and Heroku
 ![]()
 
 ## Sources
-
+Tutor, help from CJ Sanders, google, Week 11 activities
 
