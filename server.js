@@ -65,28 +65,20 @@ app.post('/api/notes', (req, res) => {
 // give id to new note
 // push to all notes
 
+// DELETE /api/notes/:id 
+// should receive a query parameter that 
+// contains the id of a note to delete. 
+// To delete a note, you'll need to read all notes from the db.json file, 
+// remove the note with the given id property, 
+// and then rewrite the notes to the db.json file.
+
 // // Deleting one
 app.delete('/api/notes/:id', (req, res) => {
-    let noteData = fs.readFileSync('./db/db.json');
-    let note = JSON.parse(noteData);
+    let noteData = JSON.parse(fs.readFileSync('./db/db.json'));
+    let note = (req.params.id).toString();
     const notesSaved = note.find(n => n.id === parseInt(req.params.id));
-    const notesIndex = note.indexOf(notesSaved);
-    note.splice(notesIndex);
-
-    fs.writeFile(__dirname + "/db/db.json", JSON.stringify(note), (err, data) => {
-        if (err) throw err;
-        res.json(note);
-    });
-    // noteData.filter(noteById => {
-    //     return noteById.id != note;
-    // })
-    // fs.writeFile('./db/db.json', JSON.stringify(noteData), (err) => {
-    //     if (err) {
-    //         console.log(err);
-    //     } else {
-    //         res.json(noteData);
-    //     }
-    // });
+    fs.writeFileSync('./db/db.json', JSON.stringify(noteData));
+    res.json(noteData);
 });
 
 // GET * 
@@ -115,4 +107,4 @@ app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
 //         //send response back to client
 //         res.json(noteTaker)
 //     });
-// // });
+// });
