@@ -28,15 +28,10 @@ THEN I am presented with empty fields to enter a new note title and the note’s
 
 ## Table of Contents
 - [Installation] (#Installation)
-- [Usage] (#Usage)
 - [Credits] (#Credits)
 
 ## Installation
 This application uses Node.js, Express.js, uuid, and Heroku
-
-## Usage
-
-
 
 ## Walkthrough Video
 ![]()

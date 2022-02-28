@@ -14,54 +14,53 @@ app.use(express.static('public'));
 
 // HTML ROUTES 
 // GET /notes
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
 app.get('/notes', (req, res) => {
     // should return notes.html
     res.sendFile(path.join(__dirname, './public/notes.html'));
-})
+});
 
 // API ROUTES
 // GET /api/notes
 app.get('/api/notes', (req, res) => {
     // should read db.json file
     // return all saved notes as JSON
-    fs.readFile('./db/db.json', (err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.send(data);
-        }
-    })
-})
+    res.sendFile(path.join(__dirname, './db/db.json'));
+});
 
 // POST /api/notes
 app.post('/api/notes', (req, res) => {
     // receive a new note to save on the request body
     // add it to the db.json file
     // return the new note to the client with a unique id when it's saved (body-parser)
+    // console.info(`${req.method} request received to add a note`);
     const { title, text } = req.body;
     if (title && text) {
         const note = {
             title,
             text,
-            id: uuid
-        }
-        fs.readFile('./db/db.json', (err, data) => {
+            id: uuid(),
+        };
+        fs.readFile('./db/db.json', 'utf8', (err, data) => {
             if (err) {
                 console.log(err);
             } else {
                 const allNotes = JSON.parse(data);
                 allNotes.push(note);
-                fs.writeFile('./db/db.json', JSON.stringify(allNotes), (err) => {
+                fs.writeFile('./db/db.json', allNotes, (err) => {
                     if (err) {
                         console.log(err);
                     } else {
-                        res.json(allNotes);
+                        res.json(JSON.parse(allNotes))
                     }
-                })
+                });
             }
-        })
-    }
-})
+        });
+    };
+});
 // give id to new note
 // push to all notes
 
@@ -74,9 +73,12 @@ app.post('/api/notes', (req, res) => {
 
 // // Deleting one
 app.delete('/api/notes/:id', (req, res) => {
-    let noteData = JSON.parse(fs.readFileSync('./db/db.json'));
+    let noteData = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
     let note = (req.params.id).toString();
-    const notesSaved = note.find(n => n.id === parseInt(req.params.id));
+    noteData = noteData.filter (selected => {
+        return selected.id !=noteId;
+    })
+    
     fs.writeFileSync('./db/db.json', JSON.stringify(noteData));
     res.json(noteData);
 });
